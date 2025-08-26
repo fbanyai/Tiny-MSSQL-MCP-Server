@@ -28,18 +28,6 @@ cp .env.example .env
 npm run build
 ```
 
-## Usage
-
-### Development
-```bash
-npm run dev
-```
-
-### Production
-```bash
-npm run start
-```
-
 ## Configuration
 
 Set the following environment variables:
@@ -60,24 +48,24 @@ You can test the MCP server using the MCP inspector:
 ```powershell
 $env:MSSQL_SERVER="localhost\SQLEXPRESS"
 $env:MSSQL_DATABASE="YourDatabase"
-$env:MSSQL_USER="sa"
+$env:MSSQL_USER="YourUsername"
 $env:MSSQL_PASSWORD="YourPassword"
 $env:MSSQL_ENCRYPT="false"
 $env:MSSQL_TRUST_CERT="true"
 Remove-Item Env:MSSQL_TRUSTED_CONNECTION -ErrorAction SilentlyContinue
 
-npx @modelcontextprotocol/inspector node D:/Tools/MCP/SQL_MCP/dist/index.js
+npx @modelcontextprotocol/inspector node dist/index.js
 ```
 
-## Adding to Claude Desktop
+## Adding to Claude Code
 
-To add this MCP server to Claude Desktop:
+To add this MCP server to Claude Code:
 
 ```powershell
-claude mcp add sql-mcp node "D:/Tools/MCP/SQL_MCP/dist/index.js" `
+claude mcp add sql-mcp node "[FULLPATH]/dist/index.js" `
   --env MSSQL_SERVER="localhost\SQLEXPRESS" `
   --env MSSQL_DATABASE="YourDatabase" `
-  --env MSSQL_USER="sa" `
+  --env MSSQL_USER="YourUsername" `
   --env MSSQL_PASSWORD="YourPassword" `
   --env MSSQL_ENCRYPT="false" `
   --env MSSQL_TRUST_CERT="true"
