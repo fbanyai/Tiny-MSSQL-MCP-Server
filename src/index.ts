@@ -66,27 +66,30 @@ class SQLMCPServer {
       );
     }
 
+    const serverString = process.env.MSSQL_SERVER || 'localhost';
+    const [server, instanceName] = serverString.includes('\\')
+      ? serverString.split('\\')
+      : [serverString, process.env.MSSQL_INSTANCE];
+
     const config: sql.config = {
-      server: process.env.MSSQL_SERVER || 'localhost',
+      server,
       database: process.env.MSSQL_DATABASE || 'master',
       options: {
         encrypt: process.env.MSSQL_ENCRYPT === 'true',
         trustServerCertificate: process.env.MSSQL_TRUST_CERT === 'true',
         connectTimeout: 30000,
         requestTimeout: 30000,
-        instanceName: process.env.MSSQL_INSTANCE || undefined
+        instanceName: instanceName || undefined
       }
     };
 
-    if (useTrustedConnection) {
-      config.authentication = {
-        type: 'default',
-        options: {}
-      };
-    } else {
+    if (!useTrustedConnection) {
       config.user = process.env.MSSQL_USER;
       config.password = process.env.MSSQL_PASSWORD;
     }
+    // Note: For true Windows Authentication (Trusted Connection) with mssql package,
+    // you need to install msnodesqlv8 driver and use a connection string instead.
+    // The default tedious driver doesn't support integrated Windows Authentication.
 
     try {
       this.pool = new sql.ConnectionPool(config);
