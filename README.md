@@ -35,14 +35,21 @@ npm run build
 
 Set the following environment variables:
 
-- `MSSQL_SERVER`: SQL Server hostname (default: localhost)
+- `MSSQL_SERVER`: SQL Server hostname (default: localhost). For named instances use format: `localhost\SQLEXPRESS`
 - `MSSQL_DATABASE`: Database name (default: master)
-- `MSSQL_USER`: Username for authentication
-- `MSSQL_PASSWORD`: Password for authentication
-- `MSSQL_ENCRYPT`: Enable encryption (true/false)
-- `MSSQL_TRUST_CERT`: Trust server certificate (true/false)
-- `MSSQL_TRUSTED_CONNECTION`: Use Windows Authentication (true/false)
-- `MSSQL_INSTANCE`: SQL Server instance name (optional)
+- `MSSQL_USER`: SQL Server username for authentication (required)
+- `MSSQL_PASSWORD`: SQL Server password for authentication (required)
+- `MSSQL_ENCRYPT`: Enable encryption (true/false, default: false for local development)
+- `MSSQL_TRUST_CERT`: Trust server certificate (true/false, default: true for local development)
+
+### Authentication Requirements
+
+**Important:** This server currently only supports SQL Authentication. Windows Authentication (MSSQL_TRUSTED_CONNECTION) is not supported as the underlying `mssql` package with its default `tedious` driver cannot use integrated Windows Authentication.
+
+To use this server with SQL Server:
+1. Ensure SQL Server is configured for Mixed Mode Authentication
+2. Create a SQL Server login with username and password
+3. Grant appropriate permissions to the database
 
 ## Testing
 
@@ -55,7 +62,6 @@ $env:MSSQL_USER="YourUsername"
 $env:MSSQL_PASSWORD="YourPassword"
 $env:MSSQL_ENCRYPT="false"
 $env:MSSQL_TRUST_CERT="true"
-Remove-Item Env:MSSQL_TRUSTED_CONNECTION -ErrorAction SilentlyContinue
 
 npx @modelcontextprotocol/inspector node dist/index.js
 ```
